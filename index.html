@@ -1,10 +1,176 @@
-<!-- ... existing code ... -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biodata Diri - Naufal Muzakkie</title>
+    <style>
+        :root {
+            --bg-color: #121826; /* Abu-abu kebiruan gelap (nyaman di mata) */
+            --card-bg: #1f2937; /* Abu-abu kartu */
+            --text-main: #f9fafb; /* Putih */
+            --text-muted: #9ca3af; /* Abu-abu terang */
+            --accent-blue: #0ea5e9; /* Biru laut segar */
+            --accent-hover: #0284c7; /* Biru laut gelap untuk hover */
+            --wa-color: #25D366; /* Warna Hijau WhatsApp */
+            --wa-hover: #1ebe57; /* Warna Hijau WhatsApp gelap untuk hover */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .bio-card {
+            background-color: var(--card-bg);
+            max-width: 420px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 35px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-blue);
+            margin: 0 auto 20px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .info-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .info-list li {
+            background: rgba(255, 255, 255, 0.04);
+            margin-bottom: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .info-list li:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .info-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .cta-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cta-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            width: 100%;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-wa {
+            background-color: var(--wa-color);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.25);
+        }
+
+        .btn-wa:hover {
+            background-color: var(--wa-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-email {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25);
+        }
+
         .btn-email:hover {
             background-color: var(--accent-hover);
             transform: translateY(-2px);
         }
 
-        /* --- TAMBAHAN CSS UNTUK TAB & SERTIFIKAT --- */
         .tab-container {
             display: flex;
             background: rgba(255, 255, 255, 0.05);
@@ -78,25 +244,93 @@
 <body>
 
     <div class="bio-card">
-        <!-- --- BAGIAN TAB NAVIGASI --- -->
+        
+        <!-- BAGIAN TAB NAVIGASI -->
         <div class="tab-container">
             <button class="tab-btn active" id="btn-profil" onclick="switchTab('profil')">Profil</button>
             <button class="tab-btn" id="btn-sertifikat" onclick="switchTab('sertifikat')">Sertifikat</button>
         </div>
 
-        <!-- --- HALAMAN PROFIL (BIODATA) --- -->
         <div id="profil-view">
             <!-- Foto Profil -->
             <img src="gambar ku.jpeg" alt="Foto Naufal Muzakkie" class="profile-img">
-<!-- ... existing code ... -->
-            <!-- Tombol Email -->
-            <a href="mailto:nflzakkie12@gmail.com" class="cta-button btn-email">
-                ✉️ Kirim Email
-            </a>
-        </div>
-        </div> <!-- Penutup profil-view -->
+            
+            <!-- Heading -->
+            <h1>Biodata Diri</h1>
+            <div class="subtitle">Naufal Muzakkie</div>
+            
+            <!-- Deskripsi Singkat -->
+            <p class="description">
+                Saya mahasiswa yang memiliki harapan yang sangat tinggi untuk bisa bekerja di sebuah perusahaan seperti Indofood sebagai QC (Quality Control).
+            </p>
 
-        <!-- --- HALAMAN SERTIFIKAT --- -->
+            <!-- List Informasi -->
+            <ul class="info-list">
+                <li>
+                    <span class="icon">📍</span>
+                    <div class="info-content">
+                        <span class="info-label">Asal</span>
+                        <span class="info-value">Semarang, Jawa Tengah, Indonesia</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">🎂</span>
+                    <div class="info-content">
+                        <span class="info-label">Tanggal Lahir</span>
+                        <span class="info-value">18 Juli 2006</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">🎓</span>
+                    <div class="info-content">
+                        <span class="info-label">Pekerjaan / Role</span>
+                        <span class="info-value">Mahasiswa</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">🩺</span>
+                    <div class="info-content">
+                        <span class="info-label">Penyakit</span>
+                        <span class="info-value">Asma</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">🎮</span>
+                    <div class="info-content">
+                        <span class="info-label">Hobi</span>
+                        <span class="info-value">Bermain game dan mengeksplor hal baru</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">🔗</span>
+                    <div class="info-content">
+                        <span class="info-label">Link Sosial Penting</span>
+                        <span class="info-value">@Nmuzkkie</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">✉️</span>
+                    <div class="info-content">
+                        <span class="info-label">Kontak Utama</span>
+                        <span class="info-value">nflzakkie12@gmail.com</span>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Tombol Kontak -->
+            <div class="cta-section">
+                <p class="cta-text">Hubungi Saya:</p>
+                <!-- Tombol WA -->
+                <a href="https://wa.me/6285753238046" class="cta-button btn-wa" target="_blank">
+                    💬 Chat via WhatsApp
+                </a>
+                <!-- Tombol Email -->
+                <a href="mailto:nflzakkie12@gmail.com" class="cta-button btn-email">
+                    ✉️ Kirim Email
+                </a>
+            </div>
+        </div> <!-- Akhir dari profil-view -->
+
         <div id="sertifikat-view" style="display: none;">
             <h1>Sertifikat Saya</h1>
             <div class="subtitle">Penghargaan & Pencapaian</div>
@@ -117,11 +351,10 @@
                     <div class="cert-desc">Seminar nasional mengenai inovasi industri pangan modern.</div>
                 </div>
             </div>
-        </div> <!-- Penutup sertifikat-view -->
+        </div> <!-- Akhir dari sertifikat-view -->
 
     </div>
 
-    <!-- --- JAVASCRIPT UNTUK PINDAH HALAMAN --- -->
     <script>
         function switchTab(tabId) {
             // Hapus warna biru (status aktif) dari semua tombol tab
