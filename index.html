@@ -179,6 +179,70 @@
             text-transform: uppercase;
         }
 
+        .home-bio {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0 auto 25px auto;
+            max-width: 95%;
+        }
+
+        .quick-info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 18px 15px;
+            box-shadow: var(--shadow-sm);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 10px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .quick-info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qi-icon {
+            font-size: 18px;
+            background: rgba(14, 165, 233, 0.1);
+            padding: 8px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .qi-text {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .qi-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .qi-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* Statistik Kecil */
         .stats-container {
             display: flex;
@@ -369,8 +433,43 @@
         <section id="home" class="home-section reveal active">
             <img src="gambar ku.jpeg" alt="Naufal Muzakkie" class="profile-img">
             <h1 class="home-title">Naufal Muzakkie</h1>
-            <div class="home-role">Mahasiswa</div>
+            <div class="home-role">Mahasiswa Agroindustri</div>
             
+            <p class="home-bio">
+                "Mahasiswa Agroindustri yang bersemangat dan berorientasi pada kualitas. Berambisi bergabung dengan Indofood sebagai QC untuk memastikan produk aman dan konsisten. Pecinta teknologi terbaru; aktif mengikuti perkembangan IoT dan otomatisasi untuk meningkatkan efisiensi produksi."
+            </p>
+
+            <div class="quick-info-card">
+                <div class="quick-info-item">
+                    <span class="qi-icon">📍</span>
+                    <div class="qi-text">
+                        <span class="qi-label">Lokasi</span>
+                        <span class="qi-value">Semarang</span>
+                    </div>
+                </div>
+                <div class="quick-info-item">
+                    <span class="qi-icon">🎓</span>
+                    <div class="qi-text">
+                        <span class="qi-label">Pendidikan</span>
+                        <span class="qi-value">Agroindustri</span>
+                    </div>
+                </div>
+                <div class="quick-info-item">
+                    <span class="qi-icon">💡</span>
+                    <div class="qi-text">
+                        <span class="qi-label">Minat</span>
+                        <span class="qi-value">Teknologi & IoT</span>
+                    </div>
+                </div>
+                <div class="quick-info-item">
+                    <span class="qi-icon">🧪</span>
+                    <div class="qi-text">
+                        <span class="qi-label">Bidang</span>
+                        <span class="qi-value">Quality Control</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="stats-container">
                 <div class="stat-box">
                     <div class="stat-num">🏆 2+</div>
