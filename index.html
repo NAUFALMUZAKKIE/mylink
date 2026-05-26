@@ -54,7 +54,6 @@
             overflow-x: hidden;
         }
 
-        /* Wrapper utama diset max-width agar bagus di HP dan tengah di Desktop */
         .container {
             max-width: 540px;
             margin: 0 auto;
@@ -84,19 +83,24 @@
         }
 
         .nav-links {
+            position: relative;
             display: flex;
-            gap: 15px;
-            overflow-x: auto; /* Bisa di-scroll menyamping di HP */
+            gap: 5px;
+            overflow-x: auto;
             white-space: nowrap;
-            padding-bottom: 2px;
-            scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
+            padding: 5px;
+            scrollbar-width: none;
         }
         
         .nav-links::-webkit-scrollbar {
-            display: none; /* Sembunyikan scrollbar Chrome/Safari */
+            display: none;
         }
 
         .nav-links a {
+            position: relative;
+            z-index: 2;
+            padding: 6px 16px;
+            border-radius: 20px;
             color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
@@ -106,6 +110,29 @@
 
         .nav-links a:hover, .nav-links a.active {
             color: var(--accent-blue);
+        }
+
+        /* --- JELLY LIQUID GLASS INDICATOR --- */
+        .nav-indicator {
+            position: absolute;
+            top: 5px;
+            left: 0;
+            height: calc(100% - 10px);
+            background: rgba(14, 165, 233, 0.15); /* Warna air/gelas */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            /* Efek jelly kenyal saat berpindah tempat */
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1; /* Di bawah teks menu */
+            pointer-events: none; /* Agar klik tetap menembus ke link */
+        }
+
+        [data-theme="dark"] .nav-indicator {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.15);
         }
 
         .theme-toggle {
@@ -122,7 +149,7 @@
         }
 
         main {
-            padding-top: 80px; /* Jarak untuk header */
+            padding-top: 80px;
             padding-bottom: 50px;
         }
 
@@ -152,7 +179,6 @@
             width: 140px;
             height: 140px;
             object-fit: cover;
-            /* Modern Rounded (Squircle) */
             border-radius: 35px;
             margin: 0 auto 20px auto;
             display: block;
@@ -243,7 +269,6 @@
             text-overflow: ellipsis;
         }
 
-        /* Statistik Kecil */
         .stats-container {
             display: flex;
             justify-content: center;
@@ -324,10 +349,14 @@
             box-shadow: var(--shadow-sm);
         }
 
+        /* --- SERTIFIKAT GRID & MODAL STYLES --- */
         .cert-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr); /* 2 Kolom untuk tampilan lebar */
+            gap: 15px;
+        }
+        @media (max-width: 450px) {
+            .cert-grid { grid-template-columns: 1fr; } /* 1 Kolom untuk HP */
         }
         .cert-card {
             background: var(--card-bg);
@@ -335,25 +364,122 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+        }
+        .cert-img-wrapper {
+            overflow: hidden;
+            border-bottom: 1px solid var(--card-border);
+            position: relative;
         }
         .cert-img {
             width: 100%;
-            height: auto;
+            height: 160px;
             object-fit: cover;
-            border-bottom: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+        .cert-img-wrapper::after {
+            content: '🔍 Klik untuk perbesar';
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .cert-card:hover .cert-img {
+            transform: scale(1.08); /* Efek zoom in saat kursor diarahkan */
+        }
+        .cert-card:hover .cert-img-wrapper::after {
+            opacity: 1;
         }
         .cert-body {
             padding: 15px;
+            flex-grow: 1;
         }
         .cert-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
             margin-bottom: 5px;
+            line-height: 1.4;
         }
         .cert-desc {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
+
+        /* Tombol Show More */
+        .btn-show-more {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 2px solid var(--accent-blue);
+            margin: 20px auto 0 auto;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            width: fit-content;
+            transition: all 0.3s ease;
+        }
+        .btn-show-more:hover {
+            background: var(--accent-blue);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Modal / Lightbox Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: var(--accent-blue);
+        }
+        /* --- END SERTIFIKAT STYLES --- */
 
         .goals-text {
             font-size: 16px;
@@ -417,6 +543,7 @@
     <header>
         <div class="nav-container">
             <nav class="nav-links">
+                <div class="nav-indicator" id="nav-indicator"></div>
                 <a href="#home" class="active">Home</a>
                 <a href="#about">About</a>
                 <a href="#skills">Skills</a>
@@ -493,7 +620,7 @@
                     <span class="info-icon">📍</span>
                     <div class="info-text">
                         <h4>Asal</h4>
-                        <p>Semarang</p>
+                        <p>Banjarbaru</p>
                     </div>
                 </div>
                 <div class="info-item">
@@ -532,33 +659,47 @@
         </section>
 
         <section id="sertifikat" class="reveal">
-            <h2 class="section-title">📜 Sertifikat</h2>
-            <div class="cert-grid">
+            <h2 class="section-title">📜 Sertifikat & Penghargaan</h2>
+            
+            <div class="cert-grid" id="cert-grid">
                 <!-- Sertifikat 1 -->
                 <div class="cert-card">
-                    <img src="sertifikat 1 pemilu HIMKI.jpeg" alt="Sertifikat Pemilu HIMKI" class="cert-img">
+                    <div class="cert-img-wrapper">
+                        <img src="sertifikat 1 pemilu HIMKI.jpeg" alt="Sertifikat Pemilu HIMKI" class="cert-img">
+                    </div>
                     <div class="cert-body">
                         <div class="cert-title">Komisi Pengadaan & Dokumentasi</div>
                         <div class="cert-desc">Pemilihan Umum Mahasiswa HIMKI FKIP ULM.</div>
                     </div>
                 </div>
+                
                 <!-- Sertifikat 2 -->
                 <div class="cert-card">
-                    <img src="sertifikat 2 mengikuti workshop media.jpeg" alt="Sertifikat Workshop Media" class="cert-img">
+                    <div class="cert-img-wrapper">
+                        <img src="sertifikat 2 mengikuti workshop media.jpeg" alt="Sertifikat Workshop Media" class="cert-img">
+                    </div>
                     <div class="cert-body">
                         <div class="cert-title">Peserta Workshop Media</div>
                         <div class="cert-desc">"Chemistry Meets Creativity: Desain Grafis untuk Pendidikan Kimia".</div>
                     </div>
                 </div>
+                
                 <!-- Sertifikat 3 -->
                 <div class="cert-card">
-                    <img src="sertifikat 3 ketua koordinator osis.jpeg" alt="Sertifikat Ketua Koordinator OSIS" class="cert-img">
+                    <div class="cert-img-wrapper">
+                        <img src="sertifikat 3 ketua koordinator osis.jpeg" alt="Sertifikat Ketua Koordinator OSIS" class="cert-img">
+                    </div>
                     <div class="cert-body">
                         <div class="cert-title">Ketua Koordinator Bidang VII</div>
                         <div class="cert-desc">Penghargaan dari Kepala SMA Negeri 1 Banjarmasin Periode 2022-2023.</div>
                     </div>
                 </div>
             </div>
+
+            <!-- Tombol Show More -->
+            <button id="show-more-btn" class="btn-show-more" style="display: none;">
+                Lihat Semua 🔽
+            </button>
         </section>
 
         <section id="goals" class="reveal">
@@ -587,12 +728,17 @@
 
     </main>
 
+    <!-- Modal Preview Sertifikat -->
+    <div id="cert-modal" class="modal">
+        <span class="modal-close" id="modal-close">&times;</span>
+        <img class="modal-content" id="modal-img">
+    </div>
+
     <script>
         /* Fitur 1: Dark Mode Toggle dengan LocalStorage */
         const themeBtn = document.getElementById('theme-btn');
-        const currentTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
+        const currentTheme = localStorage.getItem('theme') || 'dark';
 
-        // Set tema awal saat web dimuat
         if (currentTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             themeBtn.innerHTML = '☀️';
@@ -601,7 +747,6 @@
             themeBtn.innerHTML = '🌙';
         }
 
-        // Fungsi saat tombol tema ditekan
         function toggleTheme() {
             let theme = document.documentElement.getAttribute('data-theme');
             if (theme === 'dark') {
@@ -617,12 +762,10 @@
 
         /* Fitur 2: Animasi Scroll (Reveal Fade Up) */
         const reveals = document.querySelectorAll('.reveal');
-        
         const revealOptions = {
-            threshold: 0.15, // Mulai animasi saat 15% elemen terlihat
+            threshold: 0.15,
             rootMargin: "0px 0px -50px 0px"
         };
-
         const revealOnScroll = new IntersectionObserver(function(entries, observer) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -638,12 +781,23 @@
         /* Fitur 3: Highlight Navigasi Aktif saat Scroll */
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-links a');
+        const indicator = document.getElementById('nav-indicator');
+
+        // Fungsi untuk menggeser gelembung jelly ke menu yang aktif
+        function updateIndicator(el) {
+            if(!el) return;
+            indicator.style.left = `${el.offsetLeft}px`;
+            indicator.style.width = `${el.offsetWidth}px`;
+        }
+
+        // Posisikan gelembung saat pertama kali web dibuka dan saat layar diubah ukurannya
+        window.addEventListener('load', () => updateIndicator(document.querySelector('.nav-links a.active')));
+        window.addEventListener('resize', () => updateIndicator(document.querySelector('.nav-links a.active')));
 
         window.addEventListener('scroll', () => {
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
                 if (pageYOffset >= (sectionTop - 150)) {
                     current = section.getAttribute('id');
                 }
@@ -653,10 +807,74 @@
                 link.classList.remove('active');
                 if (link.getAttribute('href').includes(current)) {
                     link.classList.add('active');
-                    // Scroll navigasi menyamping otomatis di HP agar menu aktif terlihat
                     link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    // Panggil fungsi untuk menggeser jelly ke link ini
+                    updateIndicator(link);
                 }
             });
+        });
+
+        /* Fitur 4: Show More / Show Less Sertifikat */
+        const certCards = document.querySelectorAll('.cert-card');
+        const showMoreBtn = document.getElementById('show-more-btn');
+        let isExpanded = false;
+        const initialVisible = 2; // Tampilkan 2 sertifikat pertama saja
+
+        // Sembunyikan sertifikat ke-3 dst pada awalnya
+        certCards.forEach((card, index) => {
+            if(index >= initialVisible) {
+                card.style.display = 'none';
+            }
+        });
+
+        // Munculkan tombol jika sertifikat lebih dari batas awal (2)
+        if (certCards.length > initialVisible) {
+            showMoreBtn.style.display = 'block';
+        }
+
+        showMoreBtn.addEventListener('click', () => {
+            isExpanded = !isExpanded;
+            if(isExpanded) {
+                // Tampilkan Semua
+                certCards.forEach(card => card.style.display = 'flex');
+                showMoreBtn.innerHTML = 'Tutup Sebagian 🔼';
+            } else {
+                // Sembunyikan Kembali
+                certCards.forEach((card, index) => {
+                    if(index >= initialVisible) {
+                        card.style.display = 'none';
+                    }
+                });
+                showMoreBtn.innerHTML = 'Lihat Semua 🔽';
+                // Scroll kembali ke atas bagian sertifikat
+                document.getElementById('sertifikat').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        /* Fitur 5: Modal / Lightbox Image Preview */
+        const modal = document.getElementById('cert-modal');
+        const modalImg = document.getElementById('modal-img');
+        const certImages = document.querySelectorAll('.cert-img');
+        const closeModal = document.getElementById('modal-close');
+
+        // Buka modal saat gambar diklik
+        certImages.forEach(img => {
+            img.addEventListener('click', () => {
+                modal.classList.add('active');
+                modalImg.src = img.src;
+            });
+        });
+
+        // Tutup modal saat tombol 'X' diklik
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Tutup modal saat area luar gambar (background gelap) diklik
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) {
+                modal.classList.remove('active');
+            }
         });
     </script>
 </body>
