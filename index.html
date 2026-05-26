@@ -7,84 +7,107 @@
     <title>Naufal Muzakkie | Portfolio & Biodata</title>
     
     <style>
+        /* =========================================
+           1. CORE VARIABLES (TEMA WARNA)
+           ========================================= */
         :root {
-            /* Light Mode Variables - Lebih bersih dan lega */
             --bg-grad-1: #f8fafc; 
             --bg-grad-2: #e0f2fe; 
             --text-main: #0f172a;
             --text-muted: #64748b;
+            --accent-blue: #0ea5e9;
+            --wa-color: #25D366;
+            
+            /* Variabel Khusus Desktop (Smooth Premium) */
             --card-bg: rgba(255, 255, 255, 0.6);
             --card-border: rgba(255, 255, 255, 0.8);
             --nav-bg: rgba(255, 255, 255, 0.75);
-            --accent-blue: #0ea5e9;
-            --accent-hover: #0284c7;
-            --wa-color: #25D366;
-            
-            /* Premium Smooth Variables */
             --shadow-sm: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 12px 30px -5px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 20px 40px -5px rgba(0, 0, 0, 0.12);
-            --glass-blur: blur(12px); /* Dikurangi sedikit agar GPU HP lebih ringan */
-            --transition-smooth: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            --transition-bounce: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --glass-blur: blur(12px);
+            --anim-speed: 0.6s;
+            --anim-jelly: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --anim-smooth: cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         [data-theme="dark"] {
-            /* Dark Mode Variables - Warna gelap OLED premium */
             --bg-grad-1: #090e17; 
             --bg-grad-2: #131c2f; 
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            
             --card-bg: rgba(15, 23, 42, 0.55);
             --card-border: rgba(255, 255, 255, 0.08);
             --nav-bg: rgba(9, 14, 23, 0.8);
-            --accent-blue: #38bdf8;
-            --accent-hover: #0ea5e9;
-            
             --shadow-sm: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 12px 30px -5px rgba(0, 0, 0, 0.4);
-            --shadow-hover: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* =========================================
+           2. PENGATURAN KHUSUS HP / MOBILE
+           ========================================= */
+        @media (pointer: coarse), (max-width: 768px) {
+            :root {
+                /* Ganti blur berat dengan warna solid transparan agar GPU HP tidak lag */
+                --card-bg: rgba(255, 255, 255, 0.85); 
+                --nav-bg: rgba(255, 255, 255, 0.95);
+                --glass-blur: blur(2px); /* Blur sangat minimal */
+                --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+                
+                /* Animasi lebih cepat dan lurus (linear) agar mulus di HP */
+                --anim-speed: 0.3s; 
+                --anim-jelly: ease-out; 
+                --anim-smooth: ease-out;
+            }
+            [data-theme="dark"] {
+                --card-bg: #141e30; /* Solid dark */
+                --nav-bg: #0b111c;
+                --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        /* =========================================
+           3. RESET & ANTI BOCOR (FIX LAYAR PUTIH)
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Sangat penting agar padding tidak menambah lebar */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html, body {
             width: 100%;
-            max-width: 100%;
-            overflow-x: hidden; /* Anti geser horizontal / garis putih */
+            max-width: 100vw;
+            overflow-x: hidden; /* Mengunci elemen yang bocor ke samping */
         }
 
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 100px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Hilangkan blok biru saat di-tap di HP */
+            background-color: var(--bg-grad-1); /* Warna dasar mencegah putih */
         }
 
         body {
             color: var(--text-main);
             line-height: 1.7;
-            transition: color 0.6s ease;
             position: relative;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Memisahkan background ke pseudo-element untuk mencegah bug kedut (repaint) di HP */
-        body::before {
-            content: '';
+        /* Background terpisah untuk hardware acceleration (mencegah kedut saat scroll) */
+        .bg-layer {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%; /* Fix garis putih (jangan gunakan 100vw) */
-            height: 100%; /* Fix garis putih (jangan gunakan 100vh) */
+            width: 100vw;
+            height: 100vh;
             background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
             z-index: -1;
-            transition: background 0.6s ease;
-            will-change: background;
+            transition: background 0.5s ease;
+            pointer-events: none;
         }
 
         .container {
@@ -92,9 +115,11 @@
             max-width: 560px;
             margin: 0 auto;
             padding: 0 24px;
-            overflow-x: hidden;
         }
 
+        /* =========================================
+           4. NAVBAR & MENU JELLY
+           ========================================= */
         header {
             position: fixed;
             top: 0;
@@ -105,8 +130,7 @@
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--card-border);
-            transition: var(--transition-smooth);
-            transform: translateZ(0); /* Hardware acceleration */
+            transition: background 0.5s ease;
         }
 
         .nav-container {
@@ -115,7 +139,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 24px;
+            padding: 12px 20px;
         }
 
         .nav-links {
@@ -125,534 +149,200 @@
             overflow-x: auto;
             white-space: nowrap;
             padding: 5px;
-            scrollbar-width: none;
+            scrollbar-width: none; /* Firefox */
         }
-        
-        .nav-links::-webkit-scrollbar {
-            display: none;
-        }
+        .nav-links::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
 
         .nav-links a {
             position: relative;
             z-index: 2;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 20px;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 600;
-            transition: color 0.3s ease;
+            transition: color var(--anim-speed) var(--anim-smooth);
         }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-blue); }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--accent-blue);
-        }
-
-        /* --- JELLY LIQUID GLASS INDICATOR --- */
         .nav-indicator {
             position: absolute;
             top: 5px;
             left: 0;
             height: calc(100% - 10px);
-            background: rgba(14, 165, 233, 0.12); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(14, 165, 233, 0.15); 
             border: 1px solid rgba(14, 165, 233, 0.25);
             border-radius: 24px;
-            transition: var(--transition-bounce);
+            transition: all var(--anim-speed) var(--anim-jelly);
             z-index: 1; 
             pointer-events: none; 
         }
 
         [data-theme="dark"] .nav-indicator {
-            background: rgba(56, 189, 248, 0.12);
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.1);
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.3);
         }
 
         .theme-toggle {
             background: none;
             border: none;
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
             padding: 5px;
-            margin-left: 15px;
-            transition: var(--transition-bounce);
-        }
-        .theme-toggle:hover {
-            transform: scale(1.15) rotate(15deg);
+            margin-left: 10px;
+            transition: transform 0.3s ease;
         }
 
+        /* =========================================
+           5. KONTEN & KARTU (CARDS)
+           ========================================= */
         main {
-            padding-top: 100px;
+            padding-top: 90px;
             padding-bottom: 70px;
+            overflow: hidden; /* Mengamankan tumpahan dari dalam kontainer */
         }
 
         section {
-            padding: 60px 0; /* Spacing disesuaikan sedikit untuk HP */
+            padding: 50px 0;
             border-bottom: 1px solid var(--card-border);
         }
-        section:last-child {
-            border-bottom: none;
-        }
+        section:last-child { border-bottom: none; }
 
         .section-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            letter-spacing: -0.5px;
+            gap: 10px;
         }
 
-        .home-section {
-            text-align: center;
-            padding-top: 20px;
-        }
+        .home-section { text-align: center; padding-top: 15px; }
 
         .profile-img {
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 40px; /* Bentuk squircle elegan */
-            margin: 0 auto 25px auto;
+            border-radius: 35px; 
+            margin: 0 auto 20px auto;
             display: block;
             border: 4px solid var(--card-bg);
             box-shadow: var(--shadow-md);
-            transition: var(--transition-bounce);
-        }
-        .profile-img:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-hover);
-            border-color: rgba(255, 255, 255, 0.9);
+            transition: transform var(--anim-speed) var(--anim-smooth);
         }
 
-        .home-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            letter-spacing: -1px;
+        /* Matikan efek hover berat di HP */
+        @media (pointer: fine) {
+            .profile-img:hover { transform: translateY(-5px) scale(1.03); }
         }
 
-        .home-role {
-            font-size: 15px;
-            color: var(--accent-blue);
-            font-weight: 700;
-            margin-bottom: 25px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
+        .home-title { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
+        .home-role { font-size: 14px; color: var(--accent-blue); font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .home-bio { font-size: 14.5px; color: var(--text-muted); margin: 0 auto 30px auto; max-width: 100%; }
 
-        .home-bio {
-            font-size: 15px;
-            color: var(--text-muted);
-            line-height: 1.8;
-            margin: 0 auto 35px auto;
-            max-width: 95%;
+        .card-base {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
         }
 
         .quick-info-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 24px 20px;
-            box-shadow: var(--shadow-sm);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 20px 15px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px 15px;
-            margin-bottom: 35px;
+            gap: 15px 10px;
+            margin-bottom: 30px;
             text-align: left;
-            transition: var(--transition-smooth);
         }
         
-        @media (max-width: 380px) {
-            .quick-info-card {
-                grid-template-columns: 1fr; /* Jadi 1 kolom di HP ukuran kecil agar tidak sesak */
-            }
-        }
+        @media (max-width: 380px) { .quick-info-card { grid-template-columns: 1fr; } }
 
-        .quick-info-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .quick-info-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .qi-item { display: flex; align-items: center; gap: 10px; }
         .qi-icon {
-            font-size: 20px;
-            background: rgba(14, 165, 233, 0.1);
-            padding: 10px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            flex-shrink: 0;
-            transition: var(--transition-smooth);
+            font-size: 18px; background: rgba(14, 165, 233, 0.1);
+            padding: 10px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; flex-shrink: 0;
         }
-        .quick-info-item:hover .qi-icon {
-            transform: scale(1.1);
-            background: rgba(14, 165, 233, 0.2);
-        }
+        .qi-text { display: flex; flex-direction: column; overflow: hidden; }
+        .qi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
+        .qi-value { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .qi-text {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        .stats-container { display: flex; gap: 12px; margin-bottom: 30px; }
+        @media (max-width: 380px) { .stats-container { flex-direction: column; } }
+        .stat-box { padding: 15px; flex: 1; text-align: center; }
+        .stat-num { font-size: 18px; font-weight: 800; }
+        .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
 
-        .qi-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            margin-bottom: 3px;
-        }
+        .about-grid { padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        @media (max-width: 400px) { .about-grid { grid-template-columns: 1fr; } }
+        .about-item { display: flex; align-items: flex-start; gap: 10px; }
+        .about-text h4 { font-size: 11px; color: var(--accent-blue); text-transform: uppercase; font-weight: 700; margin-bottom: 3px; }
+        .about-text p { font-size: 14px; font-weight: 600; }
 
-        .qi-value {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .stats-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 35px;
-        }
-        
-        @media (max-width: 380px) {
-            .stats-container {
-                flex-direction: column; /* Tersusun ke bawah pada layar kecil */
-            }
-        }
-        
-        .stat-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            padding: 15px;
-            border-radius: 18px;
-            box-shadow: var(--shadow-sm);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            flex: 1;
-            transition: var(--transition-bounce);
-        }
-        .stat-box:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-        .stat-num {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 28px;
-            box-shadow: var(--shadow-sm);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            margin-bottom: 20px;
-            transition: var(--transition-smooth);
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-        @media (max-width: 400px) {
-            .info-grid { grid-template-columns: 1fr; }
-        }
-
-        .info-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        .info-icon {
-            font-size: 22px;
-        }
-        .info-text h4 {
-            font-size: 12px;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        .info-text p {
-            font-size: 14.5px;
-            font-weight: 600;
-        }
-
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+        .skills-container { display: flex; flex-wrap: wrap; gap: 10px; }
         .skill-tag {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: var(--shadow-sm);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            transition: var(--transition-bounce);
-        }
-        .skill-tag:hover {
-            background: var(--accent-blue);
-            color: #fff;
-            border-color: var(--accent-blue);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-md);
+            padding: 8px 16px; border-radius: 30px; font-size: 13.5px; font-weight: 600;
         }
 
-        /* --- SERTIFIKAT GRID & MODAL STYLES --- */
-        .cert-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 20px;
-        }
-        @media (max-width: 450px) {
-            .cert-grid { grid-template-columns: 1fr; } 
-        }
-        .cert-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            transition: var(--transition-smooth);
-        }
-        .cert-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .cert-img-wrapper {
-            overflow: hidden;
-            border-bottom: 1px solid var(--card-border);
-            position: relative;
-        }
-        .cert-img {
-            width: 100%;
-            height: 170px;
-            object-fit: cover;
-            cursor: pointer;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .cert-img-wrapper::after {
-            content: '🔍 Perbesar';
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.65);
-            backdrop-filter: blur(4px);
-            color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 12px;
-            pointer-events: none;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: var(--transition-smooth);
-        }
-        .cert-card:hover .cert-img {
-            transform: scale(1.05); 
-        }
-        .cert-card:hover .cert-img-wrapper::after {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .cert-body {
-            padding: 18px;
-            flex-grow: 1;
-        }
-        .cert-title {
-            font-size: 15px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            line-height: 1.4;
-        }
-        .cert-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
+        /* --- SERTIFIKAT --- */
+        .cert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        @media (max-width: 450px) { .cert-grid { grid-template-columns: 1fr; } }
+        .cert-card { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+        .cert-img-wrapper { position: relative; border-bottom: 1px solid var(--card-border); }
+        .cert-img { width: 100%; height: 160px; object-fit: cover; cursor: pointer; transition: transform var(--anim-speed) ease; }
+        .cert-body { padding: 15px; }
+        .cert-title { font-size: 14px; font-weight: 800; margin-bottom: 5px; line-height: 1.4; }
+        .cert-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
         .btn-show-more {
-            background: transparent;
-            color: var(--accent-blue);
-            border: 2px solid var(--accent-blue);
-            margin: 30px auto 0 auto;
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-weight: 700;
-            cursor: pointer;
-            display: block;
-            width: fit-content;
-            transition: var(--transition-bounce);
-        }
-        .btn-show-more:hover {
-            background: var(--accent-blue);
-            color: #fff;
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
+            background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue);
+            margin: 25px auto 0 auto; padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 14px;
+            cursor: pointer; display: block;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .modal.active {
-            display: flex;
-            opacity: 1;
-        }
-        .modal-content {
-            max-width: 90%;
-            max-height: 85vh;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            transform: scale(0.95) translateY(20px);
-            transition: var(--transition-bounce);
-            object-fit: contain;
-        }
-        .modal.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
-        .modal-close {
-            position: absolute;
-            top: 25px;
-            right: 30px;
-            color: white;
-            font-size: 38px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        .modal-close:hover {
-            color: var(--accent-blue);
-            transform: rotate(90deg);
-        }
-
-        .goals-text {
-            font-size: 16.5px;
-            font-style: italic;
-            line-height: 1.9;
-            text-align: center;
-            color: var(--text-main);
-            position: relative;
-            padding: 10px;
-        }
-        .goals-text::before {
-            content: '"';
-            font-size: 45px;
-            color: var(--accent-blue);
-            opacity: 0.2;
-            position: absolute;
-            top: -20px;
-            left: -10px;
-            font-family: serif;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            padding: 16px;
-            border-radius: 18px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 15px;
-            transition: var(--transition-bounce);
-            color: #fff;
-        }
-        .btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            filter: brightness(1.05);
-        }
-        .btn-wa { background-color: var(--wa-color); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.25); }
-        .btn-email { background-color: var(--accent-blue); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25); }
-        .btn-social {
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-            box-shadow: var(--shadow-sm);
-            backdrop-filter: var(--glass-blur);
-        }
-        .btn-social:hover {
-            box-shadow: var(--shadow-md);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
+        .goals-box { padding: 25px; }
+        .goals-text { font-size: 15px; font-style: italic; line-height: 1.8; text-align: center; position: relative; padding: 5px; }
         
-        /* Premium Fade Up Reveal - Dioptimalkan untuk HP */
+        .btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 14px; border-radius: 16px; text-decoration: none;
+            font-weight: 700; font-size: 15px; margin-bottom: 12px; color: #fff;
+        }
+        .btn-wa { background-color: var(--wa-color); }
+        .btn-email { background-color: var(--accent-blue); }
+        .btn-social { background-color: transparent; color: var(--text-main); border: 1px solid var(--card-border); }
+
+        /* --- MODAL --- */
+        .modal {
+            display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content { max-width: 95%; max-height: 85vh; border-radius: 10px; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal.active .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 15px; right: 25px; color: white; font-size: 35px; cursor: pointer; }
+
+        /* =========================================
+           6. ANIMASI REVEAL (Super Ringan)
+           ========================================= */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), 
-                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: opacity, transform; /* Hardware Acceleration on GPU */
+            transform: translateY(20px);
+            transition: opacity var(--anim-speed) ease-out, transform var(--anim-speed) ease-out;
+            will-change: opacity, transform;
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
+    <!-- Background murni, anti lag -->
+    <div class="bg-layer"></div>
 
     <header>
         <div class="nav-container">
@@ -680,29 +370,29 @@
                 "Mahasiswa Agroindustri yang bersemangat dan berorientasi pada kualitas. Berambisi bergabung dengan Indofood sebagai QC untuk memastikan produk aman dan konsisten. Pecinta teknologi terbaru; aktif mengikuti perkembangan IoT dan otomatisasi untuk meningkatkan efisiensi produksi."
             </p>
 
-            <div class="quick-info-card">
-                <div class="quick-info-item">
+            <div class="card-base quick-info-card">
+                <div class="qi-item">
                     <span class="qi-icon">📍</span>
                     <div class="qi-text">
                         <span class="qi-label">Lokasi</span>
                         <span class="qi-value">Banjarbaru</span>
                     </div>
                 </div>
-                <div class="quick-info-item">
+                <div class="qi-item">
                     <span class="qi-icon">🎓</span>
                     <div class="qi-text">
                         <span class="qi-label">Pendidikan</span>
                         <span class="qi-value">Agroindustri</span>
                     </div>
                 </div>
-                <div class="quick-info-item">
+                <div class="qi-item">
                     <span class="qi-icon">💡</span>
                     <div class="qi-text">
                         <span class="qi-label">Minat</span>
                         <span class="qi-value">Teknologi & IoT</span>
                     </div>
                 </div>
-                <div class="quick-info-item">
+                <div class="qi-item">
                     <span class="qi-icon">🧪</span>
                     <div class="qi-text">
                         <span class="qi-label">Bidang</span>
@@ -712,15 +402,15 @@
             </div>
 
             <div class="stats-container">
-                <div class="stat-box">
+                <div class="card-base stat-box">
                     <div class="stat-num">🏆 3</div>
                     <div class="stat-label">Sertifikat</div>
                 </div>
-                <div class="stat-box">
+                <div class="card-base stat-box">
                     <div class="stat-num">💼 QC</div>
                     <div class="stat-label">Fokus Karir</div>
                 </div>
-                <div class="stat-box">
+                <div class="card-base stat-box">
                     <div class="stat-num">🚀 100%</div>
                     <div class="stat-label">Motivasi</div>
                 </div>
@@ -729,31 +419,31 @@
 
         <section id="about" class="reveal">
             <h2 class="section-title">👤 About Me</h2>
-            <div class="card info-grid">
-                <div class="info-item">
-                    <span class="info-icon">📍</span>
-                    <div class="info-text">
+            <div class="card-base about-grid">
+                <div class="about-item">
+                    <span class="qi-icon">📍</span>
+                    <div class="about-text">
                         <h4>Asal</h4>
                         <p>Banjarbaru</p>
                     </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-icon">🎂</span>
-                    <div class="info-text">
+                <div class="about-item">
+                    <span class="qi-icon">🎂</span>
+                    <div class="about-text">
                         <h4>Tgl Lahir</h4>
                         <p>18 Juli 2006</p>
                     </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-icon">🩺</span>
-                    <div class="info-text">
+                <div class="about-item">
+                    <span class="qi-icon">🩺</span>
+                    <div class="about-text">
                         <h4>Penyakit</h4>
                         <p>Asma</p>
                     </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-icon">🎮</span>
-                    <div class="info-text">
+                <div class="about-item">
+                    <span class="qi-icon">🎮</span>
+                    <div class="about-text">
                         <h4>Hobi</h4>
                         <p>Game & Eksplor</p>
                     </div>
@@ -764,11 +454,11 @@
         <section id="skills" class="reveal">
             <h2 class="section-title">⚡ Skills & Minat</h2>
             <div class="skills-container">
-                <div class="skill-tag">Quality Control (QC)</div>
-                <div class="skill-tag">Problem Solving</div>
-                <div class="skill-tag">Disiplin Waktu</div>
-                <div class="skill-tag">Eksplorasi Teknologi</div>
-                <div class="skill-tag">Teamwork</div>
+                <div class="card-base skill-tag">Quality Control (QC)</div>
+                <div class="card-base skill-tag">Problem Solving</div>
+                <div class="card-base skill-tag">Disiplin Waktu</div>
+                <div class="card-base skill-tag">Eksplorasi Teknologi</div>
+                <div class="card-base skill-tag">Teamwork</div>
             </div>
         </section>
 
@@ -777,7 +467,7 @@
             
             <div class="cert-grid" id="cert-grid">
                 <!-- Sertifikat 1 -->
-                <div class="cert-card">
+                <div class="card-base cert-card">
                     <div class="cert-img-wrapper">
                         <img src="sertifikat 1 pemilu HIMKI.jpeg" alt="Sertifikat Pemilu HIMKI" class="cert-img">
                     </div>
@@ -788,7 +478,7 @@
                 </div>
                 
                 <!-- Sertifikat 2 -->
-                <div class="cert-card">
+                <div class="card-base cert-card">
                     <div class="cert-img-wrapper">
                         <img src="sertifikat 2 mengikuti workshop media.jpeg" alt="Sertifikat Workshop Media" class="cert-img">
                     </div>
@@ -799,7 +489,7 @@
                 </div>
                 
                 <!-- Sertifikat 3 -->
-                <div class="cert-card">
+                <div class="card-base cert-card">
                     <div class="cert-img-wrapper">
                         <img src="sertifikat 3 ketua koordinator osis.jpeg" alt="Sertifikat Ketua Koordinator OSIS" class="cert-img">
                     </div>
@@ -817,7 +507,7 @@
 
         <section id="goals" class="reveal">
             <h2 class="section-title">🎯 Future Goals</h2>
-            <div class="card">
+            <div class="card-base goals-box">
                 <p class="goals-text">
                     "Saya memiliki harapan dan dedikasi yang sangat tinggi untuk bisa berkarir dan memberikan kontribusi terbaik di sebuah perusahaan besar seperti <strong>Indofood</strong>, khususnya pada posisi <strong>Quality Control (QC)</strong>."
                 </p>
@@ -826,7 +516,7 @@
 
         <section id="contact" class="reveal">
             <h2 class="section-title">✉️ Contact Me</h2>
-            <p style="margin-bottom: 25px; color: var(--text-muted); font-size: 15px;">Tertarik untuk berkolaborasi atau memiliki tawaran menarik? Mari terhubung!</p>
+            <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 14px;">Tertarik untuk berkolaborasi atau memiliki tawaran menarik? Mari terhubung!</p>
             
             <a href="https://wa.me/6285753238046" class="btn btn-wa" target="_blank">
                 💬 Chat WhatsApp
@@ -834,68 +524,51 @@
             <a href="mailto:nflzakkie12@gmail.com" class="btn btn-email">
                 📧 Kirim Email
             </a>
-            <a href="https://instagram.com/Nmuzkkie" class="btn btn-social" target="_blank">
+            <a href="https://instagram.com/Nmuzkkie" class="card-base btn btn-social" target="_blank">
                 🔗 Instagram @Nmuzkkie
             </a>
         </section>
 
     </main>
 
-    <!-- Modal Preview Sertifikat -->
+    <!-- Modal Preview -->
     <div id="cert-modal" class="modal">
         <span class="modal-close" id="modal-close">&times;</span>
         <img class="modal-content" id="modal-img">
     </div>
 
     <script>
-        /* Fitur 1: Dark Mode Toggle dengan LocalStorage */
+        // 1. Logika Dark Mode
         const themeBtn = document.getElementById('theme-btn');
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         const currentTheme = localStorage.getItem('theme') || 'dark';
 
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeBtn.innerHTML = '☀️';
-            document.querySelector('meta[name="theme-color"]').setAttribute("content", "#090e17");
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            themeBtn.innerHTML = '🌙';
-            document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f8fafc");
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeBtn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+            metaThemeColor.setAttribute("content", theme === 'dark' ? "#090e17" : "#f8fafc");
         }
+        applyTheme(currentTheme);
 
         function toggleTheme() {
-            let theme = document.documentElement.getAttribute('data-theme');
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                themeBtn.innerHTML = '🌙';
-                document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f8fafc");
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                themeBtn.innerHTML = '☀️';
-                document.querySelector('meta[name="theme-color"]').setAttribute("content", "#090e17");
-            }
+            const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
         }
 
-        /* Fitur 2: Animasi Scroll Premium (Reveal Fade Up) */
+        // 2. Animasi Scroll (Ringan menggunakan Intersection Observer)
         const reveals = document.querySelectorAll('.reveal');
-        const revealOptions = {
-            threshold: 0.15,
-            rootMargin: "0px 0px -50px 0px"
-        };
-        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+        const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, revealOptions);
+        }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
 
-        reveals.forEach(reveal => {
-            revealOnScroll.observe(reveal);
-        });
+        reveals.forEach(reveal => revealObserver.observe(reveal));
 
-        /* Fitur 3: Highlight Navigasi Aktif dengan IntersectionObserver (Super Smooth) */
+        // 3. Logika Navigasi Jelly (Sangat dioptimalkan agar tidak patah-patah)
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-links a');
         const indicator = document.getElementById('nav-indicator');
@@ -906,95 +579,68 @@
             indicator.style.width = `${el.offsetWidth}px`;
         }
 
-        window.addEventListener('load', () => updateIndicator(document.querySelector('.nav-links a.active')));
-        window.addEventListener('resize', () => updateIndicator(document.querySelector('.nav-links a.active')));
+        // Jalankan sekali saat dimuat
+        setTimeout(() => updateIndicator(document.querySelector('.nav-links a.active')), 100);
 
-        // Menggunakan Observer pengganti Scroll Event Listener agar animasi 60fps tanpa nge-lag
-        const navObserverOptions = {
-            root: null,
-            rootMargin: '-40% 0px -60% 0px', 
-            threshold: 0
-        };
+        // Throttle Scroll Event (Hanya berjalan sesekali, tidak membebani HP)
+        let isScrolling;
+        window.addEventListener('scroll', () => {
+            window.clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (window.scrollY >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
 
-        const navObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const currentId = entry.target.getAttribute('id');
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${currentId}`) {
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${current}`) {
+                        if(!link.classList.contains('active')) {
+                            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
                             link.classList.add('active');
                             link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                             updateIndicator(link);
                         }
-                    });
-                }
-            });
-        }, navObserverOptions);
-
-        sections.forEach(section => {
-            navObserver.observe(section);
+                    }
+                });
+            }, 50); // Delay 50ms (Cepat tapi cukup memberi nafas ke RAM HP)
         });
 
-        /* Fitur 4: Show More / Show Less Sertifikat */
+        // 4. Logika Sertifikat
         const certCards = document.querySelectorAll('.cert-card');
         const showMoreBtn = document.getElementById('show-more-btn');
         let isExpanded = false;
         const initialVisible = 2; 
 
-        certCards.forEach((card, index) => {
-            if(index >= initialVisible) {
-                card.style.display = 'none';
-            }
-        });
-
         if (certCards.length > initialVisible) {
+            certCards.forEach((card, i) => { if(i >= initialVisible) card.style.display = 'none'; });
             showMoreBtn.style.display = 'block';
         }
 
         showMoreBtn.addEventListener('click', () => {
             isExpanded = !isExpanded;
-            if(isExpanded) {
-                certCards.forEach(card => {
-                    card.style.display = 'flex';
-                    card.style.animation = 'none';
-                    card.offsetHeight; 
-                    card.style.animation = null; 
-                });
-                showMoreBtn.innerHTML = 'Tutup Sebagian 🔼';
-            } else {
-                certCards.forEach((card, index) => {
-                    if(index >= initialVisible) {
-                        card.style.display = 'none';
-                    }
-                });
-                showMoreBtn.innerHTML = 'Lihat Semua 🔽';
-                document.getElementById('sertifikat').scrollIntoView({ behavior: 'smooth' });
-            }
+            certCards.forEach((card, i) => {
+                if(i >= initialVisible) card.style.display = isExpanded ? 'flex' : 'none';
+            });
+            showMoreBtn.innerHTML = isExpanded ? 'Tutup Sebagian 🔼' : 'Lihat Semua 🔽';
+            if(!isExpanded) document.getElementById('sertifikat').scrollIntoView({ behavior: 'smooth' });
         });
 
-        /* Fitur 5: Modal / Lightbox Image Preview Premium */
+        // 5. Modal Gambar
         const modal = document.getElementById('cert-modal');
         const modalImg = document.getElementById('modal-img');
-        const certImages = document.querySelectorAll('.cert-img');
-        const closeModal = document.getElementById('modal-close');
-
-        certImages.forEach(img => {
+        
+        document.querySelectorAll('.cert-img').forEach(img => {
             img.addEventListener('click', () => {
                 modal.classList.add('active');
                 modalImg.src = img.src;
             });
         });
 
-        closeModal.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
+        document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
     </script>
 </body>
 </html>
