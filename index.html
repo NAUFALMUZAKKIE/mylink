@@ -58,12 +58,24 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
-            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.7;
-            transition: background 0.6s ease, color 0.6s ease;
+            transition: color 0.6s ease;
             overflow-x: hidden;
+        }
+
+        /* Memisahkan background ke pseudo-element untuk mencegah bug kedut (repaint) di HP */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            z-index: -1;
+            transition: background 0.6s ease;
+            will-change: background;
         }
 
         .container {
@@ -606,6 +618,7 @@
             transform: translateY(40px);
             transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), 
                         transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform; /* Bantuan Hardware Acceleration untuk HP */
         }
         .reveal.active {
             opacity: 1;
@@ -695,7 +708,7 @@
                     <span class="info-icon">📍</span>
                     <div class="info-text">
                         <h4>Asal</h4>
-                        <p>Semarang</p>
+                        <p>Banjarbaru</p>
                     </div>
                 </div>
                 <div class="info-item">
@@ -866,21 +879,35 @@
         window.addEventListener('load', () => updateIndicator(document.querySelector('.nav-links a.active')));
         window.addEventListener('resize', () => updateIndicator(document.querySelector('.nav-links a.active')));
 
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= (sectionTop - 180)) { /* Offset disesuaikan dengan padding baru */
-                    current = section.getAttribute('id');
-                }
-            });
+        let currentSection = 'home';
+        let scrollTimeout;
 
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                    link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    updateIndicator(link);
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) {
+                window.cancelAnimationFrame(scrollTimeout);
+            }
+            
+            scrollTimeout = window.requestAnimationFrame(() => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (window.scrollY >= (sectionTop - 180)) { 
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                // Hanya update DOM (Gelembung & Menu) JIKA section benar-benar berubah
+                // Ini mencegah lag & kedut parah saat scroll di HP
+                if (current !== currentSection) {
+                    currentSection = current;
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').includes(current)) {
+                            link.classList.add('active');
+                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                            updateIndicator(link);
+                        }
+                    });
                 }
             });
         });
