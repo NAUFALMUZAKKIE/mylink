@@ -49,21 +49,21 @@
            ========================================= */
         @media (pointer: coarse), (max-width: 768px) {
             :root {
-                /* Ganti blur berat dengan warna solid transparan agar GPU HP tidak lag */
-                --card-bg: rgba(255, 255, 255, 0.85); 
-                --nav-bg: rgba(255, 255, 255, 0.95);
-                --glass-blur: blur(2px); /* Blur sangat minimal */
-                --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+                /* Sedikit kurangi transparansi agar GPU HP tidak kerja keras me-render blur */
+                --card-bg: rgba(255, 255, 255, 0.75); 
+                --nav-bg: rgba(255, 255, 255, 0.85);
+                --glass-blur: blur(4px); /* Blur lebih ringan tapi tetap ada efek glass */
+                --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.06);
                 
-                /* Animasi lebih cepat dan lurus (linear) agar mulus di HP */
-                --anim-speed: 0.3s; 
-                --anim-jelly: ease-out; 
-                --anim-smooth: ease-out;
+                /* ANIMASI DIKEMBALIKAN! Bouncy dan smooth tetap jalan di HP */
+                --anim-speed: 0.5s; 
+                --anim-jelly: cubic-bezier(0.34, 1.4, 0.64, 1); /* Sedikit disesuaikan pantulannya */
+                --anim-smooth: cubic-bezier(0.22, 1, 0.36, 1);
             }
             [data-theme="dark"] {
-                --card-bg: #141e30; /* Solid dark */
-                --nav-bg: #0b111c;
-                --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+                --card-bg: rgba(20, 30, 48, 0.85); 
+                --nav-bg: rgba(11, 17, 28, 0.9);
+                --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.25);
             }
         }
 
@@ -73,7 +73,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box; /* Sangat penting agar padding tidak menambah lebar */
+            box-sizing: border-box; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
@@ -81,13 +81,13 @@
         html, body {
             width: 100%;
             max-width: 100vw;
-            overflow-x: hidden; /* Mengunci elemen yang bocor ke samping */
+            overflow-x: hidden; 
         }
 
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 100px;
-            background-color: var(--bg-grad-1); /* Warna dasar mencegah putih */
+            background-color: var(--bg-grad-1); 
         }
 
         body {
@@ -149,9 +149,9 @@
             overflow-x: auto;
             white-space: nowrap;
             padding: 5px;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none; 
         }
-        .nav-links::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+        .nav-links::-webkit-scrollbar { display: none; }
 
         .nav-links a {
             position: relative;
@@ -191,7 +191,10 @@
             cursor: pointer;
             padding: 5px;
             margin-left: 10px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s var(--anim-jelly);
+        }
+        .theme-toggle:active {
+            transform: scale(0.8);
         }
 
         /* =========================================
@@ -200,7 +203,7 @@
         main {
             padding-top: 90px;
             padding-bottom: 70px;
-            overflow: hidden; /* Mengamankan tumpahan dari dalam kontainer */
+            overflow: hidden; 
         }
 
         section {
@@ -232,7 +235,6 @@
             transition: transform var(--anim-speed) var(--anim-smooth);
         }
 
-        /* Matikan efek hover berat di HP */
         @media (pointer: fine) {
             .profile-img:hover { transform: translateY(-5px) scale(1.03); }
         }
@@ -254,23 +256,32 @@
             padding: 20px 15px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px 10px;
+            gap: 15px 12px;
             margin-bottom: 30px;
             text-align: left;
         }
         
-        @media (max-width: 380px) { .quick-info-card { grid-template-columns: 1fr; } }
+        @media (max-width: 390px) { 
+            .quick-info-card { padding: 16px 12px; gap: 12px 8px;} 
+        }
 
         .qi-item { display: flex; align-items: center; gap: 10px; }
         .qi-icon {
-            font-size: 18px; background: rgba(14, 165, 233, 0.1);
-            padding: 10px; border-radius: 12px;
+            font-size: 16px; background: rgba(14, 165, 233, 0.1);
+            padding: 8px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            width: 40px; height: 40px; flex-shrink: 0;
+            width: 36px; height: 36px; flex-shrink: 0;
         }
         .qi-text { display: flex; flex-direction: column; overflow: hidden; }
         .qi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
-        .qi-value { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* FIX TEKS POTONG: Mengizinkan teks untuk turun ke bawah (wrap) */
+        .qi-value { 
+            font-size: 12.5px; 
+            font-weight: 700; 
+            line-height: 1.25; /* Jarak antar baris dirapatkan agar rapi saat membungkus */
+            word-wrap: break-word; /* Mencegah overflow */
+        }
 
         .stats-container { display: flex; gap: 12px; margin-bottom: 30px; }
         @media (max-width: 380px) { .stats-container { flex-direction: column; } }
@@ -312,6 +323,10 @@
             display: flex; align-items: center; justify-content: center; gap: 10px;
             width: 100%; padding: 14px; border-radius: 16px; text-decoration: none;
             font-weight: 700; font-size: 15px; margin-bottom: 12px; color: #fff;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .btn:active {
+            transform: scale(0.96);
         }
         .btn-wa { background-color: var(--wa-color); }
         .btn-email { background-color: var(--accent-blue); }
@@ -324,17 +339,18 @@
             transition: opacity 0.3s ease;
         }
         .modal.active { display: flex; opacity: 1; }
-        .modal-content { max-width: 95%; max-height: 85vh; border-radius: 10px; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-content { max-width: 95%; max-height: 85vh; border-radius: 10px; transform: scale(0.95); transition: transform 0.3s var(--anim-jelly); }
         .modal.active .modal-content { transform: scale(1); }
         .modal-close { position: absolute; top: 15px; right: 25px; color: white; font-size: 35px; cursor: pointer; }
 
         /* =========================================
-           6. ANIMASI REVEAL (Super Ringan)
+           6. ANIMASI REVEAL (Aktif di HP & Desktop)
            ========================================= */
         .reveal {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity var(--anim-speed) ease-out, transform var(--anim-speed) ease-out;
+            transform: translateY(25px);
+            transition: opacity var(--anim-speed) var(--anim-smooth), 
+                        transform var(--anim-speed) var(--anim-smooth);
             will-change: opacity, transform;
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -396,6 +412,7 @@
                     <span class="qi-icon">🧪</span>
                     <div class="qi-text">
                         <span class="qi-label">Bidang</span>
+                        <!-- Teks di bawah ini sekarang akan membungkus rapi ke bawah jika layarnya sempit -->
                         <span class="qi-value">Quality Control</span>
                     </div>
                 </div>
@@ -556,7 +573,7 @@
             applyTheme(newTheme);
         }
 
-        // 2. Animasi Scroll (Ringan menggunakan Intersection Observer)
+        // 2. Animasi Scroll (Menggunakan Intersection Observer)
         const reveals = document.querySelectorAll('.reveal');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -568,7 +585,7 @@
 
         reveals.forEach(reveal => revealObserver.observe(reveal));
 
-        // 3. Logika Navigasi Jelly (Sangat dioptimalkan agar tidak patah-patah)
+        // 3. Logika Navigasi Jelly
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-links a');
         const indicator = document.getElementById('nav-indicator');
@@ -605,7 +622,7 @@
                         }
                     }
                 });
-            }, 50); // Delay 50ms (Cepat tapi cukup memberi nafas ke RAM HP)
+            }, 50); 
         });
 
         // 4. Logika Sertifikat
